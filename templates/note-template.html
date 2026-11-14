@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{中文短名}}｜控制文獻實驗記錄本</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body class="note-page" data-paper="{{id}}">
+  <header class="site-bar">
+    <a class="brand" href="../index.html">控制文獻實驗記錄本</a>
+    <a class="back" href="../index.html">← 回到目錄</a>
+  </header>
+
+  <main class="sheet">
+    <header id="paper-meta" class="paper-meta"></header>
+
+    <section id="summary" class="entry">
+      <h2>一句話總結</h2>
+      <p class="one-line"></p>
+    </section>
+
+    <section id="problem" class="entry">
+      <h2>研究問題</h2>
+      <p>{{這篇想解決什麼問題、為什麼重要，1–3 句}}</p>
+    </section>
+
+    <section id="method" class="entry">
+      <h2>方法</h2>
+      <ol>
+        <li>{{方法步驟 1}}</li>
+        <li>{{方法步驟 2}}</li>
+        <li>{{方法步驟 3}}</li>
+      </ol>
+      <div class="formula">{{選用：關鍵公式，純文字}}</div>
+    </section>
+
+    <section id="result" class="entry">
+      <h2>主要結果</h2>
+      <ul>
+        <li>{{結果 1，關鍵數字或結論用 <mark>螢光筆</mark> 標起來}}</li>
+        <li>{{結果 2}}</li>
+      </ul>
+    </section>
+
+    <section id="contribution" class="entry">
+      <h2>貢獻</h2>
+      <ul>
+        <li>{{貢獻 1}}</li>
+        <li>{{貢獻 2}}</li>
+      </ul>
+    </section>
+
+    <section id="limitation" class="entry">
+      <h2>限制</h2>
+      <ul>
+        <li>{{限制 1}}</li>
+        <li>{{限制 2}}</li>
+      </ul>
+    </section>
+
+    <section id="glossary" class="entry">
+      <h2>名詞小辭典</h2>
+      <dl class="glossary">
+        <dt>{{中文名詞}}<span>{{English term}}</span></dt>
+        <dd>{{白話解釋，1–2 句}}</dd>
+      </dl>
+    </section>
+
+    <nav id="pager" class="pager" aria-label="上一篇與下一篇"></nav>
+  </main>
+
+  <footer class="site-footer">控制文獻實驗記錄本｜依 AGENTS.md 規則維護</footer>
+
+  <script src="../assets/js/papers.js"></script>
+  <script src="../assets/js/note.js"></script>
+</body>
+</html>

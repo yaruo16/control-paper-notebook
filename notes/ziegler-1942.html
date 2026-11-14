@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ziegler–Nichols PID 調參法則｜控制文獻實驗記錄本</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body class="note-page" data-paper="ziegler-1942">
+  <header class="site-bar">
+    <a class="brand" href="../index.html">控制文獻實驗記錄本</a>
+    <a class="back" href="../index.html">← 回到目錄</a>
+  </header>
+
+  <main class="sheet">
+    <header id="paper-meta" class="paper-meta"></header>
+
+    <section id="summary" class="entry">
+      <h2>一句話總結</h2>
+      <p class="one-line"></p>
+    </section>
+
+    <section id="problem" class="entry">
+      <h2>研究問題</h2>
+      <p>控制的數學牽涉一大堆指數和三角函數，一般工程師沒時間推導。作者想回答兩個實務問題：<mark>怎麼在現場快速決定控制器的正確設定</mark>，以及怎麼在控制器裝上去之前就先算出設定。</p>
+    </section>
+
+    <section id="method" class="entry">
+      <h2>方法</h2>
+      <ol>
+        <li><strong>定義單位：</strong>替當時控制器的三種作用訂出實用單位：比例作用用「靈敏度」（psi/in）、自動重設用「重設率」（1/min）、預動用「預動時間」（min）。</li>
+        <li><strong>極限靈敏度法：</strong>在現場把靈敏度慢慢調高，找到剛好出現小幅持續振盪的極限靈敏度 Su，並記下振盪週期 Pu。</li>
+        <li><strong>程序反應曲線法：</strong>把控制器拆開，直接對控制閥施加一個壓力步階 ΔF，從記錄筆畫出的 S 形曲線找最大斜率點，切線讀出反應速率 R 和滯後 L，再換算成單位反應速率 R1 = R / ΔF。</li>
+        <li><strong>代入公式：</strong>兩種方法量到的數字都能代入經驗公式求設定，兩者也能互換：L = Pu / 4、R1 = 8 / (Pu·Su)。</li>
+      </ol>
+      <table class="data-table">
+        <tr><th>控制器</th><th>靈敏度</th><th>重設率（1/min）</th><th>預動時間（min）</th></tr>
+        <tr><td>P</td><td>0.5 Su = 1 / (R1·L)</td><td>—</td><td>—</td></tr>
+        <tr><td>PI</td><td>0.45 Su = 0.9 / (R1·L)</td><td>1.2 / Pu = 0.3 / L</td><td>—</td></tr>
+        <tr><td>PID</td><td>0.6 Su = 1.2 / (R1·L)</td><td>2 / Pu = 0.5 / L</td><td>Pu / 8 = 0.5 L</td></tr>
+      </table>
+      <p class="note-box">論文的「靈敏度、重設率、預動時間」大致對應現在課本的 Kp、1/Ti、Td。另外論文提到有預動時，靈敏度通常可以設在 0.6 Su 到 1 Su 之間。</p>
+    </section>
+
+    <section id="result" class="entry">
+      <h2>主要結果</h2>
+      <ul>
+        <li>把靈敏度設成極限靈敏度的一半時，振幅比約為 <mark>25%</mark>（每一波約是前一波的 1/4），作者認為這是偏移量和穩定性之間的好折衷。</li>
+        <li>加入自動重設後，靈敏度要從 0.5 Su 降到 0.45 Su，否則振幅比會明顯變大。</li>
+        <li>在測試例中加入預動後，<mark>最大偏差減少 71%、振盪週期縮短 43%</mark>，振盪消失的時間也減半。</li>
+        <li>在極限靈敏度下，振盪週期約為反應曲線滯後 L 的 4 倍。</li>
+      </ul>
+    </section>
+
+    <section id="contribution" class="entry">
+      <h2>貢獻</h2>
+      <ul>
+        <li>提出一套量測三種控制作用的單位，讓不同廠牌控制器的設定可以用同一種方式描述。</li>
+        <li>用<mark>滯後 L 和單位反應速率 R1</mark>量化程序的可控性，作者認為可以當作程序分類的依據。</li>
+        <li>同時給出現場調整法和設計階段預估法：只要算得出大致的反應曲線，設備還沒做好就能先決定控制器設定。</li>
+      </ul>
+    </section>
+
+    <section id="limitation" class="entry">
+      <h2>限制</h2>
+      <ul>
+        <li>除了一個示範例，論文沒有附實驗室或現場數據，數學推導也省略了，作者說會另外發表。</li>
+        <li>25% 振幅比不是每種場合都適合：液位控制可能要更低的靈敏度，週期很短的壓力控制則可以接受 80–90% 的振幅比；負載變化大時，還要照最難控制的負載去調。</li>
+        <li>R 和 L 只是反應曲線的粗略描述，看不出拐點前後的形狀；預動作用通常也不適用在壓力、流量和液位控制。</li>
+      </ul>
+    </section>
+
+    <section id="glossary" class="entry">
+      <h2>名詞小辭典</h2>
+      <dl class="glossary">
+        <dt>靈敏度<span>Sensitivity</span></dt>
+        <dd>每單位記錄筆移動造成的輸出壓力變化，用來衡量比例作用的強弱。</dd>
+        <dt>極限靈敏度<span>Ultimate sensitivity, Su</span></dt>
+        <dd>剛好讓振盪不增不減的靈敏度；高於它振盪會變大，低於它振盪會衰減。</dd>
+        <dt>振幅比<span>Amplitude ratio</span></dt>
+        <dd>每一波振幅和前一波的比值，論文拿來衡量穩定性。</dd>
+        <dt>偏移量<span>Offset</span></dt>
+        <dd>只用比例作用時，負載改變後記錄筆離開設定點的差距；自動重設就是用來消除它。</dd>
+        <dt>重設率<span>Reset rate</span></dt>
+        <dd>自動重設每分鐘重複一次比例修正量的次數，單位是 1/min。</dd>
+        <dt>預動時間<span>Pre-act time</span></dt>
+        <dd>預動作用讓輸出提前多少分鐘反應，依記錄筆移動的速度給出額外修正。</dd>
+      </dl>
+    </section>
+
+    <nav id="pager" class="pager" aria-label="上一篇與下一篇"></nav>
+  </main>
+
+  <footer class="site-footer">控制文獻實驗記錄本｜依 AGENTS.md 規則維護</footer>
+
+  <script src="../assets/js/papers.js"></script>
+  <script src="../assets/js/note.js"></script>
+</body>
+</html>

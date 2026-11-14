@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>從 PID 到自抗擾控制｜控制文獻實驗記錄本</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body class="note-page" data-paper="han-2009">
+  <header class="site-bar">
+    <a class="brand" href="../index.html">控制文獻實驗記錄本</a>
+    <a class="back" href="../index.html">← 回到目錄</a>
+  </header>
+
+  <main class="sheet">
+    <header id="paper-meta" class="paper-meta"></header>
+
+    <section id="summary" class="entry">
+      <h2>一句話總結</h2>
+      <p class="one-line"></p>
+    </section>
+
+    <section id="problem" class="entry">
+      <h2>研究問題</h2>
+      <p>PID 主導業界超過 80 年，但在要求越來越高的現代工業裡逐漸力不從心。作者認為 PID 架構有<mark>四個根本限制</mark>：</p>
+      <ol>
+        <li>設定值常常直接給步階，等於要求輸出和控制訊號瞬間跳變，大多數動態系統做不到。</li>
+        <li>微分項對雜訊敏感，實務上常常乾脆不用 D。</li>
+        <li>P、I、D 三項的線性加權和雖然簡單，卻不一定是最好的控制律。</li>
+        <li>積分項雖然能消除穩態誤差，卻會帶來飽和，以及相位落後造成的穩定裕度下降。</li>
+      </ol>
+    </section>
+
+    <section id="method" class="entry">
+      <h2>方法</h2>
+      <ol>
+        <li><strong>過渡過程安排：</strong>用雙積分器的時間最優解寫成微分方程（離散版本為 fhan 函數），產生輸出跟得上的平滑軌跡，參數 r 可依物理限制調快或調慢。</li>
+        <li><strong>追蹤微分器：</strong>指出常見的 s/(τs+1) 近似微分會把雜訊放大 1/τ 倍，改用抗雜訊的追蹤微分器，同時得到訊號和它的微分。</li>
+        <li><strong>非線性回授：</strong>用 fal、fhan 等非線性函數組合誤差。例如 u = |e|^α sign(e)，當 α &lt; 1 時誤差能在有限時間內收斂到零，甚至可以不用積分項。</li>
+        <li><strong>總擾動估測與抵消：</strong>把未知動態和外部擾動合成的 f(x₁, x₂, w(t), t) 當成總擾動，擴充成額外狀態 x₃，用擴張狀態觀測器（ESO）估出來後在控制量中抵消，把系統化成串聯積分器，再用 PD 控制即可。</li>
+      </ol>
+      <div class="formula">受控體：ẋ₁ = x₂，ẋ₂ = f(x₁, x₂, w(t), t) + b·u，y = x₁
+擴張狀態：x₃ = F(t)，由 ESO 估出 z₃ ≈ F(t)
+控制律：u = (u₀ − z₃) / b₀  →  系統化為 ẋ₂ ≈ u₀</div>
+      <p class="note-box">韓京清教授在 2008 年 4 月過世，這篇是由長期合作者 Zhiqiang Gao 從中文翻譯並修訂後發表的。</p>
+    </section>
+
+    <section id="result" class="entry">
+      <h2>主要結果</h2>
+      <ul>
+        <li>四個對策組合起來就是 ADRC，<mark>只剩四個調整參數</mark>：r、c、h₁、b₀；b₀ 只要在真實值 ±50% 的範圍內即可，主要靠 h₁ 調整。</li>
+        <li>模擬結果顯示，ESO 在取樣週期 h 從 0.0001 到 1000 的大範圍內都表現良好。</li>
+        <li>控制器係數<mark>不依賴受控體的數學模型</mark>，主要取決於系統的「時間尺度」；同一個架構換用不同的線性或非線性組合，可以得到超過 100 種控制器。</li>
+        <li>示範如何把 ADRC 用在時間延遲、多變數解耦、串級控制，以及含共振模態的並聯系統。</li>
+      </ul>
+    </section>
+
+    <section id="contribution" class="entry">
+      <h2>貢獻</h2>
+      <ul>
+        <li>提出<mark>總擾動</mark>的概念，把原本屬於系統鑑別的問題，轉成擾動估測與抵消的問題。</li>
+        <li>把過渡過程、追蹤微分器、非線性回授和 ESO 整合成完整的 ADRC 架構與演算法（式 26），以英文完整介紹給國際讀者。</li>
+        <li>整理出實際應用的要點：先釐清輸入和輸出、依相對階數決定 ADRC 的階數、把各種已知和未知的量歸進總擾動。</li>
+      </ul>
+    </section>
+
+    <section id="limitation" class="entry">
+      <h2>限制</h2>
+      <ul>
+        <li>作者說 ADRC 主要是透過電腦模擬實驗發展出來的；本文著重方法與觀念，沒有給出嚴謹的穩定性證明，也沒有和 PID 的量化比較數據。</li>
+        <li>fhan、fal 等非線性函數的公式較複雜，參數的物理意義需要經驗才能掌握。</li>
+        <li>成敗關鍵在於怎麼重新表述問題、把未知量歸進總擾動，作者也強調這是最關鍵的一步，對新手不一定直覺。</li>
+      </ul>
+    </section>
+
+    <section id="glossary" class="entry">
+      <h2>名詞小辭典</h2>
+      <dl class="glossary">
+        <dt>自抗擾控制<span>Active Disturbance Rejection Control, ADRC</span></dt>
+        <dd>保留 PID 以誤差驅動的特點，加上觀測器主動估測並抵消擾動的控制方法。</dd>
+        <dt>總擾動<span>Total disturbance</span></dt>
+        <dd>系統內部未知動態加上外部擾動，全部視為控制訊號要克服的同一個量。</dd>
+        <dt>擴張狀態觀測器<span>Extended State Observer, ESO</span></dt>
+        <dd>把總擾動擴充成額外的狀態，和原本的狀態一起估測出來的觀測器。</dd>
+        <dt>追蹤微分器<span>Tracking differentiator</span></dt>
+        <dd>在加速度限制下最快速地追蹤輸入訊號，同時給出它的微分，不容易放大雜訊。</dd>
+        <dt>過渡過程<span>Transient profile</span></dt>
+        <dd>事先安排、輸出能夠跟得上的平滑目標軌跡，用來取代設定值的突然跳變。</dd>
+        <dt>相對階數<span>Relative degree</span></dt>
+        <dd>從輸入到輸出最少經過幾個積分器，ADRC 的階數依它決定。</dd>
+      </dl>
+    </section>
+
+    <nav id="pager" class="pager" aria-label="上一篇與下一篇"></nav>
+  </main>
+
+  <footer class="site-footer">控制文獻實驗記錄本｜依 AGENTS.md 規則維護</footer>
+
+  <script src="../assets/js/papers.js"></script>
+  <script src="../assets/js/note.js"></script>
+</body>
+</html>

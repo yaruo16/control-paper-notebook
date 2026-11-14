@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>控制文獻實驗記錄本</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="home-page">
+  <header class="site-bar">
+    <a class="brand" href="index.html">控制文獻實驗記錄本</a>
+    <span class="back">P16144108 李亞若</span>
+  </header>
+
+  <section class="hero">
+    <h1><span>控制文獻</span>實驗記錄本</h1>
+    <p>把讀過的控制／系統工程論文整理成同一種格式的筆記：一句話總結、問題、方法、結果、貢獻、限制和名詞小辭典。</p>
+  </section>
+
+  <section class="controls" aria-label="搜尋與篩選">
+    <div class="control-row">
+      <input id="search" class="search" type="search" placeholder="搜尋標題、作者、關鍵字…" aria-label="搜尋文獻">
+      <select id="sort" class="sort" aria-label="排序方式">
+        <option value="year-desc">年份：新 → 舊</option>
+        <option value="year-asc">年份：舊 → 新</option>
+      </select>
+    </div>
+    <div class="control-row">
+      <span class="control-label">標籤</span>
+      <div id="tag-filter" class="control-row"></div>
+    </div>
+    <div class="control-row">
+      <span class="control-label">閱讀狀態</span>
+      <div id="status-filter" class="control-row"></div>
+    </div>
+  </section>
+
+  <p id="result-count" class="result-count"></p>
+  <main id="paper-grid" class="paper-grid"></main>
+
+  <footer class="site-footer">控制文獻實驗記錄本｜依 AGENTS.md 規則維護</footer>
+
+  <script src="assets/js/papers.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>卡爾曼濾波｜控制文獻實驗記錄本</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body class="note-page" data-paper="kalman-1960">
+  <header class="site-bar">
+    <a class="brand" href="../index.html">控制文獻實驗記錄本</a>
+    <a class="back" href="../index.html">← 回到目錄</a>
+  </header>
+
+  <main class="sheet">
+    <header id="paper-meta" class="paper-meta"></header>
+
+    <section id="summary" class="entry">
+      <h2>一句話總結</h2>
+      <p class="one-line"></p>
+    </section>
+
+    <section id="problem" class="entry">
+      <h2>研究問題</h2>
+      <p>從雜訊中預測或分離隨機訊號，當時主要用 Wiener 的方法，但作者指出它有<mark>四個限制</mark>，嚴重影響實用性：</p>
+      <ol>
+        <li>最佳濾波器是用脈衝響應描述的，很難據此做出實際的濾波器。</li>
+        <li>數值計算很繁複，不適合用機器計算，問題越複雜越糟。</li>
+        <li>推廣到成長記憶濾波器、非平穩預測等情況時，每次都要重新推導。</li>
+        <li>推導過程不透明，基本假設和它的後果容易被掩蓋。</li>
+      </ol>
+    </section>
+
+    <section id="method" class="entry">
+      <h2>方法</h2>
+      <ol>
+        <li><strong>正交投影：</strong>從條件分佈與條件期望的角度看估測問題，最佳線性估測就是把 x(t₁) 正交投影到觀測量生成的線性空間上，只需要一階和二階平均。</li>
+        <li><strong>隨機過程模型：</strong>依 Bode 和 Shannon 的做法，把隨機訊號表示成「白雜訊激發的線性動態系統」的輸出，並用狀態和狀態轉移（一階差分方程）來描述。</li>
+        <li><strong>定義問題 I：</strong>模型為 x(t+1) = Φ(t+1; t)x(t) + u(t)、y(t) = M(t)x(t)，要根據 y(t₀)…y(t) 找出期望損失最小的估測值。</li>
+        <li><strong>求解（定理 3）：</strong>證明最佳估測器本身就是一個線性動態系統，增益 Δ*(t) 和誤差共變異數 P*(t) 可以一步一步遞迴算出。</li>
+        <li><strong>對偶定理（定理 4）：</strong>把濾波問題和無雜訊的最佳調節器問題逐項對照，證明兩者互為對偶。</li>
+      </ol>
+      <div class="formula">x*(t+1|t) = Φ*(t+1; t) x*(t|t−1) + Δ*(t) y(t)
+Δ*(t)     = Φ(t+1; t) P*(t) M'(t) [M(t) P*(t) M'(t)]⁻¹
+Φ*(t+1; t) = Φ(t+1; t) − Δ*(t) M(t)
+P*(t+1)   = Φ*(t+1; t) P*(t) Φ'(t+1; t) + Q(t)</div>
+      <p class="note-box">這份 PDF 是 John Lukesh 在 2002 年依原刊重新排版的版本，公式是手動謄打的，他自己也提醒可能有錯（例如式 32）。上面的公式照論文定理 3 的式 21、28–30 抄寫。</p>
+    </section>
+
+    <section id="result" class="entry">
+      <h2>主要結果</h2>
+      <ul>
+        <li>同一套表述和解法，<mark>不用修改</mark>就能用在平穩與非平穩統計，以及成長記憶、無限記憶的濾波器。</li>
+        <li>導出估測誤差共變異數矩陣的非線性差分（或微分）方程，解出後不用再額外計算，就能得到最佳線性濾波器的係數；這個方程扮演的角色類似 Wiener–Hopf 方程。</li>
+        <li>證明濾波問題是無雜訊調節器問題的<mark>對偶</mark>。</li>
+        <li>用兩個非平穩預測的例子驗證（雜訊中的訊號、以等速移動粒子的位置與速度估測），得到閉合形式的解，結果和先前文獻一致並有所延伸。</li>
+      </ul>
+    </section>
+
+    <section id="contribution" class="entry">
+      <h2>貢獻</h2>
+      <ul>
+        <li>改用「狀態」的觀點表述 Wiener 問題，一次推導就涵蓋原本要分開處理的多種情況。</li>
+        <li>遞迴形式很適合數值計算：資料是數字時，直接照式 28–30 計算就好。</li>
+        <li>第一次把估測和控制之間的對偶關係明確寫出來，作者說這個關係以前只是被懷疑，從沒有被明講。</li>
+      </ul>
+    </section>
+
+    <section id="limitation" class="entry">
+      <h2>限制</h2>
+      <ul>
+        <li>假設主要隨機源是零平均、互相獨立的高斯過程，系統是線性的；作者也提到，當時對非線性濾波器幾乎一無所知。</li>
+        <li>如何從實驗資料得到模型（Φ、Q 等）不在本文範圍，作者說這大致還是未解的問題；使用時也要先給定 P*(t₀) 和 Q(t)。</li>
+        <li>非線性差分方程的收斂性和穩定性、最佳濾波器的穩定性等問題，作者留到之後的論文再處理。</li>
+      </ul>
+    </section>
+
+    <section id="glossary" class="entry">
+      <h2>名詞小辭典</h2>
+      <dl class="glossary">
+        <dt>Wiener 問題<span>Wiener problem</span></dt>
+        <dd>從含雜訊的觀測中預測或分離隨機訊號的最佳線性濾波問題。</dd>
+        <dt>狀態轉移矩陣<span>Transition matrix, Φ</span></dt>
+        <dd>描述系統狀態從這一刻變到下一刻的矩陣。</dd>
+        <dt>白雜訊<span>White noise</span></dt>
+        <dd>彼此獨立或不相關的隨機訊號，論文用它當線性系統的激發來源。</dd>
+        <dt>正交投影<span>Orthogonal projection</span></dt>
+        <dd>把要估的量投影到觀測量能表示的空間上，得到誤差平方最小的線性估測。</dd>
+        <dt>誤差共變異數矩陣<span>Covariance matrix, P*</span></dt>
+        <dd>描述最佳估測誤差有多大，它的跡（trace）就是期望的平方誤差。</dd>
+        <dt>對偶性<span>Duality</span></dt>
+        <dd>兩個問題的數學結構逐項對應，最後都化成同一個方程求解。</dd>
+      </dl>
+    </section>
+
+    <nav id="pager" class="pager" aria-label="上一篇與下一篇"></nav>
+  </main>
+
+  <footer class="site-footer">控制文獻實驗記錄本｜依 AGENTS.md 規則維護</footer>
+
+  <script src="../assets/js/papers.js"></script>
+  <script src="../assets/js/note.js"></script>
+</body>
+</html>
