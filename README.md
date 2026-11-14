@@ -6,15 +6,9 @@
 
 這個專案的重點是 [AGENTS.md](AGENTS.md)：裡面寫好網站的風格、檔案結構、筆記格式和 AI 要遵守的規則。之後只要把一篇論文丟給 AI，說一句「幫我把這篇加進文獻筆記」，AI 就能照同一套規則做出風格一致的新頁面，並自動更新首頁目錄。
 
-## 目前收錄
+## 收錄原則
 
-| 年份 | 文獻 | 閱讀狀態 |
-|---|---|---|
-| 1942 | Ziegler & Nichols — Optimum Settings for Automatic Controllers | 精讀 |
-| 1960 | Kalman — A New Approach to Linear Filtering and Prediction Problems | 略讀 |
-| 2009 | Han — From PID to Active Disturbance Rejection Control | 精讀 |
-
-每篇筆記都只根據實際提供的論文 PDF 撰寫，PDF 上沒有印的書目資料（例如 DOI）不會自己補。
+收錄的文獻清單請直接看網站首頁（資料來自 `assets/js/papers.js`）。每篇筆記都只根據實際提供的論文 PDF 撰寫，PDF 上沒有印的書目資料（例如 DOI）不會自己補。
 
 ## 資料夾結構
 
