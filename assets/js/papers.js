@@ -34,5 +34,17 @@ const PAPERS = [
     tags: ["PID", "擾動抑制", "觀測器"],
     status: "精讀",
     summary: "保留 PID 以誤差驅動、不依賴模型的優點，再用觀測器估測並抵消總擾動、搭配非線性回授，提出自抗擾控制（ADRC）作為 PID 的替代方案。"
+  },
+  {
+    id: "garcia-1989",
+    short: "模型預測控制回顧",
+    title: "Model Predictive Control: Theory and Practice—a Survey",
+    authors: "C. E. García, D. M. Prett, M. Morari",
+    year: 1989,
+    venue: "Automatica, 25(3), 335–348",
+    doi: "",
+    tags: ["預測控制", "程序控制", "最佳化", "回顧論文"],
+    status: "待讀",
+    summary: "回顧模型預測控制的歷史、演算法與理論，指出它能在設計中直接處理限制條件，最適合有限制的多變數程序控制，並列出待解的研究問題。"
   }
 ];
