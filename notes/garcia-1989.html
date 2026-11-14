@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>模型預測控制回顧｜控制文獻實驗記錄本</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body class="note-page" data-paper="garcia-1989">
+  <header class="site-bar">
+    <a class="brand" href="../index.html">控制文獻實驗記錄本</a>
+    <a class="back" href="../index.html">← 回到目錄</a>
+  </header>
+
+  <main class="sheet">
+    <header id="paper-meta" class="paper-meta"></header>
+
+    <section id="summary" class="entry">
+      <h2>一句話總結</h2>
+      <p class="one-line"></p>
+    </section>
+
+    <section id="problem" class="entry">
+      <h2>研究問題</h2>
+      <p>石化業的市場變化很大，控制系統要在模型不確定的情況下，同時滿足經濟、安全環保、設備、產品品質和操作人員偏好等多種、而且會變動的性能要求。工廠的經濟最佳操作點通常就落在<mark>多個限制條件的交會處</mark>，但一般做法是設計時忽略限制、實作時才臨時補救，設計和維護成本都很高。作者回顧模型預測控制（MPC），說明它怎麼回應這些需求、理論上又還缺什麼。</p>
+    </section>
+
+    <section id="method" class="entry">
+      <h2>方法</h2>
+      <ol>
+        <li><strong>定義與歷史：</strong>把 MPC 定義為「直接使用一個明確、可單獨辨識的模型」的一類控制器，回顧 1978–1979 年 Richalet 等人的模型預測啟發式控制、Shell 的動態矩陣控制（DMC）等起源，以及在煉油、化工等產業的應用。</li>
+        <li><strong>滾動時域：</strong>在時刻 k 用模型預測未來 p 步的輸出，以最佳化決定未來 m 步的操作量變化，只執行第一步，下一個取樣時刻再把時域往前移一格重算。</li>
+        <li><strong>用 IMC 結構分析：</strong>指出所有 MPC 都具有內部模型控制（IMC）的結構，在沒有限制條件時和傳統回授控制、線性二次控制（LQC）逐項比較。</li>
+        <li><strong>限制條件與延伸：</strong>比較 2-範數（二次規劃）、1-範數與 ∞-範數（線性規劃）三種目標函數處理限制的方式，再討論非線性 MPC 與強健性。</li>
+      </ol>
+      <div class="formula">min       Σ (l = 1…p) ‖ ŷ(k+l|k) − r(k+l) ‖² + ‖ Δu(k+l−1) ‖²
+Δu(k)…Δu(k+m−1)
+s.t.  操作量與預測輸出的線性不等式限制（式 15）</div>
+      <p class="note-box">上式是論文中 DMC 的目標函數（式 12），兩項在原式中各帶有權重矩陣，這裡為了好讀先省略；整個問題就是一個二次規劃（QP）。</p>
+    </section>
+
+    <section id="result" class="entry">
+      <h2>主要結果</h2>
+      <ul>
+        <li>沒有限制條件時，MPC 和傳統回授是等價的：任何 MPC 都能找到效能相同的傳統控制器，所以<mark>無限制 MPC 本質上並不比傳統控制好</mark>；但用 IMC 的 Q 來參數化，「所有穩定的 Q」就是所有能讓閉迴路穩定的控制器，調整起來更直接。</li>
+        <li>無限制 MPC 和 LQC 得到的控制律基本上相同；MPC 常用未來步數 m 來調整，文獻普遍認為比挑選權重矩陣容易。</li>
+        <li>MPC 最大的吸引力是<mark>工程師可以直接輸入限制條件</mark>，演算法會自動找出滿足所有限制的最佳解；在模型完美時，輸入飽和完全不影響 MPC 的穩定性。</li>
+        <li>MPC 並不像有些文獻說的那樣天生比傳統回授更強健，但它比較容易針對強健性做調整，例如 MAC 和 IMC 中的濾波器。</li>
+      </ul>
+    </section>
+
+    <section id="contribution" class="entry">
+      <h2>貢獻</h2>
+      <ul>
+        <li>把 DMC、模型演算法控制（MAC）、推論控制和 IMC 放在同一個 IMC 架構下比較，並釐清它們和 LQ 控制的關係。</li>
+        <li>澄清當時對 MPC 的誤解，例如步階或脈衝響應模型的參數比較多，並不會讓控制器更強健。</li>
+        <li>系統整理處理限制條件的方式和各種範數的優缺點，作者結論是 MPC 彈性的限制處理能力，使它最適合嚴苛的多變數程序控制問題。</li>
+      </ul>
+    </section>
+
+    <section id="limitation" class="entry">
+      <h2>限制</h2>
+      <ul>
+        <li>限制條件生效時，控制律會變成非線性、時變的，目前沒有穩定性分析方法；限制演算法也忽略模型不確定性，不保證實際變數真的滿足限制，擾動太大時 LP／QP 甚至可能找不到可行解。</li>
+        <li>非線性 MPC 才剛起步，標稱穩定性、模型不確定、限制處理等重要問題都還沒解決，計算量預期也很大。</li>
+        <li>討論只限於開迴路穩定的系統，例子以化工程序為主；以適應控制為主的預測控制（例如廣義預測控制）不在本文範圍。</li>
+      </ul>
+    </section>
+
+    <section id="glossary" class="entry">
+      <h2>名詞小辭典</h2>
+      <dl class="glossary">
+        <dt>模型預測控制<span>Model Predictive Control, MPC</span></dt>
+        <dd>直接使用明確的程序模型預測未來輸出，再用最佳化算出控制量的一類控制器。</dd>
+        <dt>滾動時域<span>Moving horizon</span></dt>
+        <dd>每次只執行最佳化結果的第一步，下一刻把預測時域往前移一格重新計算。</dd>
+        <dt>動態矩陣控制<span>Dynamic Matrix Control, DMC</span></dt>
+        <dd>Shell 工程師提出、用步階響應模型做預測的 MPC 演算法。</dd>
+        <dt>內部模型控制<span>Internal Model Control, IMC</span></dt>
+        <dd>控制系統裡放一個和程序並聯的模型，用控制器 Q 調整的架構，論文指出所有 MPC 都有這種結構。</dd>
+        <dt>二次規劃<span>Quadratic Programming, QP</span></dt>
+        <dd>目標函數是二次式、限制條件是線性不等式的最佳化問題，2-範數的 MPC 就是解這種問題。</dd>
+        <dt>限制條件<span>Constraints</span></dt>
+        <dd>程序變數不能超過的界線，例如安全範圍、設備的物理限制或產品規格。</dd>
+      </dl>
+    </section>
+
+    <nav id="pager" class="pager" aria-label="上一篇與下一篇"></nav>
+  </main>
+
+  <footer class="site-footer">控制文獻實驗記錄本｜依 AGENTS.md 規則維護</footer>
+
+  <script src="../assets/js/papers.js"></script>
+  <script src="../assets/js/note.js"></script>
+</body>
+</html>
